@@ -56,7 +56,6 @@ for (int j=0;j<W;j++) {
 }    
      }
      printw("\n");
-     
 }
 
 for (int i=0;i<W+1;i++) {
@@ -68,7 +67,7 @@ getch();
 }
 
 void setDirection (char c){
-    //nodelay(stdscr, TRUE);
+    nodelay(stdscr, TRUE);//от залипания
     switch (c){
     
     case 'a':
@@ -135,16 +134,16 @@ void pravila(){
 
      control();
      
-     if (x >= W){
+     if (x >= W-1){
         x = 0;   
 }else if (x < 0){
-        x = W-1;
+        x = W-2;
 }
 
     if (y >= H){
         y = 0;   
 }else if (y < 0){
-        y = H-1;
+        y = H -1;
 }
 
      //если съел хвост
