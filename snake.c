@@ -8,6 +8,7 @@ bool gameOver;
 const int W = 40;
 const int H = 20;
 int x,y,fruitX,fruitY;
+int hvostX[100],hvostY[100],NEWhwost;
 enum eDirection {STOP = 0,LEFT,RIGHT,UP,DOWN} dir;
 
 
@@ -18,9 +19,6 @@ void Setup(){
      y = H/2 - 1;
      fruitX = rand() % W;
      fruitY = rand() % H;
-
-
-
 }
 
 
@@ -42,8 +40,20 @@ for (int j=0;j<W;j++) {
         printw("o");
      else if (j == fruitX && i == fruitY) //вывод фруктов
         printw("*");
-     else
-     printw(" "); 
+     else{
+
+        bool print = false;
+        
+        for(int k = 0;k < NEWhwost;k++){
+
+            if (hvostX[k] == j && hvostY[k] == i){
+                print = true;
+                printw("+");
+}
+}
+        if (!print)   
+           printw(" "); 
+}    
      }
      printw("\n");
      
@@ -84,7 +94,6 @@ void setDirection (char c){
 
 
 }
-
 }
 
 void control(){
@@ -107,13 +116,51 @@ void control(){
 }
 
 
+void pravila(){
+     int prevX = hvostX[0];   
+     int prevY = hvostY[0]; 
+     int prev2X, prev2Y;
+     hvostX[0] = x;
+     hvostY[0] = y;
+     //перемещение тела за головой
+     for (int i=1;i < NEWhwost;i++){
 
+     prev2X = hvostX[i]; 
+     prev2Y = hvostY[i];
+     hvostX[i] = prevX;
+     hvostY[i] = prevY;
+     prevX = prev2X;
+     prevY = prev2Y;
+}
 
+     control();
+     
+     if (x >= W){
+        x = 0;   
+}else if (x < 0){
+        x = W-1;
+}
 
+    if (y >= H){
+        y = 0;   
+}else if (y < 0){
+        y = H-1;
+}
 
+     //если съел хвост
+     for(int i=0;i<NEWhwost;i++){
+         if(hvostX[i] == x && hvostY[i] == y){
+            gameOver = true;
+}
+}
 
-
-
+     if (x == fruitX && y == fruitY){
+     
+     fruitX = rand() % W;
+     fruitY = rand() % H;
+     NEWhwost++;
+}
+}
 
 int main(){
 
@@ -122,17 +169,16 @@ int main(){
   initscr();
   Setup();
   while (gameOver != true){
+  
   Draw();
-  
-  control();
-  
+    
   timeout(110);
   c = getch();
   setDirection(c);
   clear();
   
   
-  
+  pravila(); 
   
   refresh();
 }
